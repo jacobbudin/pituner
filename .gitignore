@@ -22,3 +22,10 @@ _testmain.go
 *.exe
 *.test
 *.prof
+
+# Temporary files
+.DS_Store
+*.sw[op]
+
+# Build products
+pituner
