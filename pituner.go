@@ -6,6 +6,17 @@ import (
 	"os"
 )
 
+type display struct {
+	primary   string
+	secondary string
+}
+
+type station struct {
+	name    string
+	url     string
+	channel int
+}
+
 func main() {
 	// Parse flags
 	debug := flag.Bool("debug", false, "enable debugging mode")
