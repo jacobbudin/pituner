@@ -1,5 +1,11 @@
 package main
 
+/*
+#include <bass.h>
+#cgo LDFLAGS: -lbass
+*/
+import "C"
+
 import (
 	"encoding/json"
 	"flag"
@@ -30,6 +36,12 @@ func main() {
 	if *help {
 		showHelp()
 		os.Exit(0)
+	}
+
+	// Do error-checking
+	if uint16(C.BASS_GetVersion()>>16&0xffff) != C.BASSVERSION {
+		fmt.Fprintf(os.Stderr, "BASS audio library version mismatch")
+		os.Exit(1)
 	}
 
 	// Load station info
