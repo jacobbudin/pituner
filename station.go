@@ -29,7 +29,7 @@ func ParseStations(stations_file_path string) ([]Station, error) {
 		return nil, err
 	}
 
-	if err := validate(stations); err != nil {
+	if err := validate(&stations); err != nil {
 		return nil, err
 	}
 
@@ -37,11 +37,11 @@ func ParseStations(stations_file_path string) ([]Station, error) {
 }
 
 // validate checks to see the array of `Station` meets logical conditions
-func validate(stations []Station) error {
+func validate(stations *[]Station) error {
 	// Check for duplicate `Channel`s
 	channels := make(map[int]bool)
 
-	for _, station := range stations {
+	for _, station := range *stations {
 		if station.Channel == 0 {
 			continue
 		}
