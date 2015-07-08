@@ -33,6 +33,8 @@ func ParseStations(stations_file_path string) ([]Station, error) {
 		return nil, err
 	}
 
+	generateChannels(&stations)
+
 	return stations, nil
 }
 
@@ -59,4 +61,30 @@ func validate(stations *[]Station) error {
 	}
 
 	return nil
+}
+
+// generateChannels creates channel numbers for those stations that lack them
+func generateChannels(stations *[]Station) {
+	i := 0
+	channels := make(map[int]bool)
+
+	for _, station := range *stations {
+		if station.Channel != 0 {
+			channels[station.Channel] = true
+		}
+	}
+
+	for j, station := range *stations {
+		if station.Channel == 0 {
+			for {
+				i++
+
+				if _, exists := channels[i]; exists == false {
+					(*stations)[j].Channel = i
+					channels[i] = true
+					break
+				}
+			}
+		}
+	}
 }
