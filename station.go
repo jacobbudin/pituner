@@ -38,7 +38,6 @@ func ParseStations(stations_file_path string) ([]Station, error) {
 
 // validate checks to see the array of `Station` meets logical conditions
 func validate(stations *[]Station) error {
-	// Check for duplicate `Channel`s
 	channels := make(map[int]bool)
 
 	for _, station := range *stations {
@@ -46,6 +45,12 @@ func validate(stations *[]Station) error {
 			continue
 		}
 
+		// Check for negative `Channels`
+		if station.Channel < 0 {
+			return errors.New("negative channel numbers exist in station listing")
+		}
+
+		// Check for duplicate `Channel`s
 		if _, exists := channels[station.Channel]; exists {
 			return errors.New("duplicate channel numbers exist in station listing")
 		}
