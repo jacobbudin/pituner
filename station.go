@@ -14,7 +14,7 @@ type Station struct {
 
 // ParseStations opens a file path to a JSON-formatted file
 // and returns an array of `Station`s
-func ParseStations(stations_file_path string) ([]Station, error) {
+func parseStations(stations_file_path string) ([]Station, error) {
 	// Open file
 	stations_data, err := ioutil.ReadFile(stations_file_path)
 
@@ -29,18 +29,22 @@ func ParseStations(stations_file_path string) ([]Station, error) {
 		return nil, err
 	}
 
-	if err := validate(&stations); err != nil {
+	if err := validateStations(&stations); err != nil {
 		return nil, err
 	}
 
-	generateChannels(&stations)
+	populateStationChannels(&stations)
 
 	return stations, nil
 }
 
-// validate checks to see the array of `Station` meets logical conditions
-func validate(stations *[]Station) error {
+// validateStations checks to see the array of `Station` meets logical conditions
+func validateStations(stations *[]Station) error {
 	channels := make(map[int]bool)
+
+	if len(*stations) == 0 {
+		return errors.New("stations file contains no stations")
+	}
 
 	for _, station := range *stations {
 		if station.Channel == 0 {
@@ -63,8 +67,8 @@ func validate(stations *[]Station) error {
 	return nil
 }
 
-// generateChannels creates channel numbers for those stations that lack them
-func generateChannels(stations *[]Station) {
+// populateStationChannels creates channel numbers for those stations that lack them
+func populateStationChannels(stations *[]Station) {
 	i := 0
 	channels := make(map[int]bool)
 
