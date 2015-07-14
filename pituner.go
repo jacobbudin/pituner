@@ -62,7 +62,7 @@ func initPlayback() {
 		os.Exit(1)
 	}
 
-	if C.BASS_Init(-1, 44100, 0, nil, nil) == C.TRUE {
+	if C.BASS_Init(-1, 44100, 0, nil, nil) == C.FALSE {
 		fmt.Fprintln(os.Stderr, "Can't initialize audio device")
 		os.Exit(1)
 	}
