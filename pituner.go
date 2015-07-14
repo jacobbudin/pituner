@@ -33,10 +33,12 @@ func main() {
 
 	stations := loadStations(*stations_file_path)
 
-	_ = Tuner{
+	tuner := Tuner{
 		Stations: stations,
 		Display:  Display{},
 	}
+
+	tuner.play(&tuner.Stations[0])
 }
 
 // loadStations loads the stations files
