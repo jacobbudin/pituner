@@ -24,6 +24,14 @@ type Tuner struct {
 func (t *Tuner) play(station *Station) {
 	t.stream_url = C.CString((*station).Url)
 	t.stream = C.BASS_StreamCreateURL(t.stream_url, 0, C.BASS_STREAM_BLOCK|C.BASS_STREAM_STATUS|C.BASS_STREAM_AUTOFREE, nil, nil)
+	for {
+		progress := (C.BASS_StreamGetFilePosition(t.stream, C.BASS_FILEPOS_BUFFER) * 100) / C.BASS_StreamGetFilePosition(t.stream, C.BASS_FILEPOS_END)
+
+		if progress >= 75 {
+			C.BASS_ChannelPlay((C.DWORD)(t.stream), C.FALSE)
+			return
+		}
+	}
 }
 
 // stop stops playback
