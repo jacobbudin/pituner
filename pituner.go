@@ -49,7 +49,7 @@ func loadStations(stations_file_path string) []Station {
 	}
 
 	if DEBUG {
-		fmt.Println("Loaded %d stations", len(stations))
+		fmt.Printf("Loaded %d stations\n", len(stations))
 	}
 
 	return stations
