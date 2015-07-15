@@ -24,10 +24,12 @@ func parseStations(stations_file_path string) ([]Station, error) {
 	if strings.Contains(stations_file_path, "://") {
 		resp, err := http.Get(stations_file_path)
 
-		if err == nil {
-			stations_data, err = ioutil.ReadAll(resp.Body)
-			resp.Body.Close()
+		if err != nil {
+			return nil, err
 		}
+
+		stations_data, err = ioutil.ReadAll(resp.Body)
+		resp.Body.Close()
 	} else {
 		stations_data, err = ioutil.ReadFile(stations_file_path)
 	}
