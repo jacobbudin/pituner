@@ -8,6 +8,7 @@ package main
 import "C"
 
 import (
+	"fmt"
 	"strings"
 	"unsafe"
 )
@@ -20,8 +21,35 @@ type Tuner struct {
 	stream_url     *C.char
 }
 
-// play begins playback
-func (t *Tuner) play(station *Station) {
+// playIndex begins playback of a `Station`, as determined by its index in `Stations`
+func (t *Tuner) playIndex(index int) {
+	if index < 0 || index >= len(t.Stations) {
+		if DEBUG {
+			fmt.Printf("Could not find station with index %d\n", index)
+		}
+
+		return
+	}
+
+	t.playStation(&t.Stations[index])
+}
+
+// playChannel begins playback of a `Station`, as determined by its channel number
+func (t *Tuner) playChannel(channel int) {
+	for _, station := range t.Stations {
+		if station.Channel == channel {
+			t.playStation(&station)
+			return
+		}
+	}
+
+	if DEBUG {
+		fmt.Printf("Could not find channel #%d\n", channel)
+	}
+}
+
+// playStation begins playback of a `Station`
+func (t *Tuner) playStation(station *Station) {
 	t.stream_url = C.CString((*station).Url)
 	t.stream = C.BASS_StreamCreateURL(t.stream_url, 0, C.BASS_STREAM_BLOCK|C.BASS_STREAM_STATUS|C.BASS_STREAM_AUTOFREE, nil, nil)
 	for {
