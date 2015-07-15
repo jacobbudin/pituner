@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strings"
 )
@@ -20,17 +21,7 @@ func parsePlaylist(playlist_url string) []string {
 		return urls
 	}
 
-	if resp.ContentLength == -1 {
-		if DEBUG {
-			fmt.Println("Playlist %s response was malformed", playlist_url)
-		}
-
-		return urls
-	}
-
-	contents := make([]byte, resp.ContentLength)
-
-	resp.Body.Read(contents)
+	contents, _ := ioutil.ReadAll(resp.Body)
 	resp.Body.Close()
 
 	lines := strings.Split(string(contents[:]), "\n")
