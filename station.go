@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
+	"net/http"
+	"strings"
 )
 
 type Station struct {
@@ -15,8 +17,20 @@ type Station struct {
 // ParseStations opens a file path to a JSON-formatted file
 // and returns an array of `Station`s
 func parseStations(stations_file_path string) ([]Station, error) {
-	// Open file
-	stations_data, err := ioutil.ReadFile(stations_file_path)
+	var stations_data []byte
+	var err error
+
+	// Open file or URL
+	if strings.Contains(stations_file_path, "://") {
+		resp, err := http.Get(stations_file_path)
+
+		if err == nil {
+			stations_data, err = ioutil.ReadAll(resp.Body)
+			resp.Body.Close()
+		}
+	} else {
+		stations_data, err = ioutil.ReadFile(stations_file_path)
+	}
 
 	if err != nil {
 		return nil, err

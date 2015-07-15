@@ -18,7 +18,7 @@ func main() {
 	// Parse flags
 	flag.BoolVar(&DEBUG, "debug", false, "enable debugging mode")
 	help := flag.Bool("help", false, "show this help")
-	stations_file_path := flag.String("stations", "etc/stations.json", "load station file")
+	stations_file_path := flag.String("stations", "etc/stations.json", "load station file or URL")
 
 	flag.Parse()
 
